@@ -1,34 +1,42 @@
 
-const formulario = document.querySelector("#formulario");
-const tabla = document.querySelector("#tabla")
-let nombreProducto = "";
-let idProducto= "";
+//ARRAY
+//Se parte de un array vacio, y se va generando a medida que se añaden producto.
 let arrProductos = JSON.parse(localStorage.getItem("producto")) || [];
 
-let objProductos = {
-  id: 1,
-  nombre: "",
-  cantidad: 1
-}
+//SELECTORES
+const formulario = document.querySelector("#formulario");
+const tabla = document.querySelector("#tabla")
+const contenidoProductos = document.querySelector("#contenidoProductos");
+
+// VARIABLES
+let nombreProducto = "";
+let idProducto= "";
+let anadirgion = "-";
+let mached = false;
 
 
+//EVENTOS
+/**
+ * Funcion de llamada cuando se hace click en boton Agregar.
+ * @param idProducto : String que se creara para filtrar.
+ */
 formulario.addEventListener("submit", (ev) => {
-  ev.preventDefault();
- // console.log(ev.target.nombre_producto.value);
+  ev.preventDefault();// Evita el envío del formulario
   nombreProducto = ev.target.nombre_producto.value;
-  let anadirgion = "-";
   idProducto = nombreProducto.split(" ").join("-") + anadirgion;
-  console.log("idProducto: ", idProducto);
-  let mached = false;
+  
+
+  /**
+   * Funcion para crear objetos dentro del array, bien aumentando la cantidad 
+   * si existe el nombre o creando un nuevo objeto si no existe el nombre.
+   * invocando al final la funcion de crearTablaProducto.
+   */
   arrProductos.forEach((item) => {
-    console.log(item.nombre);
     if (item.nombre === nombreProducto){
       item.cantidad += 1;
       mached = true;
-      console.log(item.cantidad);
     } 
   })
-
   if (!mached) {
     objProductos = {
       id:idProducto,
@@ -36,17 +44,19 @@ formulario.addEventListener("submit", (ev) => {
       cantidad:1
     }
     arrProductos.push(objProductos);
-  } else {
-    console.log("nombre coincide, no se crea objeto")
+  } else {  
   }
-  localStorage.setItem("producto", JSON.stringify(arrProductos));
-  
+  localStorage.setItem("producto", JSON.stringify(arrProductos)); 
   crearTablaProducto();
-
 })
 
+/**
+ * Funcion de llamada cuando se hace click en boton Borrar.
+ * @param idButton : String que se creara para filtrar.
+ */
 tabla.addEventListener("click", (ev) => {
-      console.log(ev.target.id);
+  //Funcion donde va a restar la cantidad del producto y en el
+  //caso de que la cantidad sea cero se elimina el objeto del array.
       arrProductos.forEach((item, index, array) => {
         if (item.id === ev.target.id && item.cantidad > 1){
           item.cantidad -= 1;
@@ -54,14 +64,16 @@ tabla.addEventListener("click", (ev) => {
           array.splice(index,1);
         }
       })
-      console.log(arrProductos);
       localStorage.setItem("producto", JSON.stringify(arrProductos));
       crearTablaProducto();
-
   })
 
+
+//FUNCIONES
+/**
+ * Funcion para crear el contenido dinamico de la tabla de productos.
+ */
 const crearTablaProducto = () => {
-  const contenidoProductos = document.querySelector("#contenidoProductos");
   contenidoProductos.innerHTML = "";
 
   arrProductos.forEach((item, index, array) => {
@@ -82,14 +94,7 @@ const crearTablaProducto = () => {
   })
 }
 
-const eliminarProducto = () => {
-  
-}
 
+
+//INVOCAR FUNCIONES
 crearTablaProducto();
-eliminarProducto();
-
-
-const agregarProducto = () => {
-  
-  }
