@@ -41,7 +41,9 @@ formulario.addEventListener("submit", (ev) => {
   localStorage.setItem("producto", JSON.stringify(arrProductos)); 
 })
 
-
+const eliminarProducto = () => {
+  
+}
 
 const agregarProducto = () => {
   
